@@ -20,13 +20,13 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
         include:
           - os: macos-latest
-            binary: tes3conv
+            binary: s3lightfixes
             archive: macos-latest.zip
           - os: ubuntu-latest
-            binary: tes3conv
+            binary: s3lightfixes
             archive: ubuntu-latest.zip
           - os: windows-latest
-            binary: tes3conv.exe
+            binary: s3lightfixes.exe
             archive: windows-latest.zip
     runs-on: ${{ matrix.os }}
     steps:
