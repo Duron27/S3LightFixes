@@ -1,5 +1,5 @@
 [package]
-name = "s3-lightfixes"
+name = "s3lightfixes"
 version = "0.1.0"
 edition = "2021"
 
