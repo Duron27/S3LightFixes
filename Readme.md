@@ -6,7 +6,12 @@ In other words, make light gud. What sets this version apart is that it's a stan
 
 # Usage
 
-Just download the executable for your OS and run it. You may optionally edit the lightconfig.toml S3Lightfixes creates next to your openmw.cfg to adjust its settings for your next run. Or, make your own lightconfig.toml and place it next to the S3LightFixes executable prior to running it. The schema is as follows:
+Just download the executable for your OS and run it however's most convenient:
+[Windows](https://github.com/magicaldave/motherJungle/releases/latest/files/windows-latest.zip)
+[Mac](https://github.com/magicaldave/motherJungle/releases/latest/files/macos-latest.zip)
+[Linux](https://github.com/magicaldave/motherJungle/releases/latest/files/ubuntu-latest.zip)
+
+You may optionally edit the lightconfig.toml S3Lightfixes creates (next to your user openmw.cfg) to adjust its settings for your next run. Or, make your own lightconfig.toml and place it next to the S3LightFixes executable before running it. The toml schema is as follows:
 
 ```toml
 # Automatically enable S3LightFixes.omwaddon
@@ -42,6 +47,16 @@ S3LightFixes also supports portable installations of OpenMW by way of utilizing 
   ```
   OPENMW_CONFIG="C:\Documents\My Games\OpenMW\openmw.cfg" .\s3lightfixes.exe
   OPENMW_CONFIG_DIR="C:\Documents\My Games\OpenMW\" .\s3lightfixes.exe
+  ```
+- Linux:
+  ```
+  OPENMW_CONFIG="$HOME/.config/openmw/openmw.cfg" ./s3lightfixes
+  OPENMW_CONFIG_DIR="$HOME/.config/openmw/" ./s3lightfixes
+  ```
+- macOS:
+  ```
+  OPENMW_CONFIG="$HOME/Library/Application Support/openmw/openmw.cfg" ./s3lightfixes
+  OPENMW_CONFIG_DIR="$HOME/Library/Application Support/openmw/" ./s3lightfixes
   ```
 
 Additionally, S3LightFixes will perform the following:
