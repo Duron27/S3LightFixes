@@ -61,6 +61,11 @@ S3LightFixes also supports portable installations of OpenMW by way of utilizing 
   OPENMW_CONFIG="$HOME/Library/Application Support/openmw/openmw.cfg" ./s3lightfixes
   OPENMW_CONFIG_DIR="$HOME/Library/Application Support/openmw/" ./s3lightfixes
   ```
+  
+Users running OpenMW with custom launchers such as `omw` should include the `OPENMW_OVERRIDE_DIR` environment variable as well, if a `data-local=` entry isn't defined by your openmw.cfg:
+```
+OPENMW_OVERRIDE_DIR="$HOME/.local/share/openmw/data" ./s3lightfixes
+```
 
 Additionally, S3LightFixes will perform the following:
 - Automatically install itself into your `data-local` directory of openmw
