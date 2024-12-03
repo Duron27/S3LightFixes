@@ -4,9 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-openmw-cfg = "0.5.1"
 palette = "0.7.6"
+serde = { version = "1.0.215", features = ["derive"] }
 toml = "0.8.19"
+
+[dependencies.openmw-cfg]
+git = "https://gitlab.com/magicaldave1/openmw-cfg"
+branch = "master"
 
 [dependencies.tes3]
 git = "https://github.com/Greatness7/tes3"
