@@ -1,0 +1,14 @@
+[package]
+name = "s3-lightfixes"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+openmw-cfg = "0.5.1"
+palette = "0.7.6"
+toml = "0.8.19"
+
+[dependencies.tes3]
+git = "https://github.com/Greatness7/tes3"
+branch = "dev"
+features = ["esp"]
