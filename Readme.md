@@ -7,8 +7,11 @@ In other words, make light gud. What sets this version apart is that it's a stan
 # Usage
 
 Just download the executable for your OS and run it however's most convenient:
+
 [Windows](https://github.com/magicaldave/motherJungle/releases/latest/files/windows-latest.zip)
+
 [Mac](https://github.com/magicaldave/motherJungle/releases/latest/files/macos-latest.zip)
+
 [Linux](https://github.com/magicaldave/motherJungle/releases/latest/files/ubuntu-latest.zip)
 
 You may optionally edit the lightconfig.toml S3Lightfixes creates (next to your user openmw.cfg) to adjust its settings for your next run. Or, make your own lightconfig.toml and place it next to the S3LightFixes executable before running it. The toml schema is as follows:
