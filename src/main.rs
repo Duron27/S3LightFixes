@@ -247,7 +247,7 @@ fn main() -> Result<()> {
                     sunlight_color: [0, 0, 0, 0],
                     fog_density: atmosphere.fog_density,
                     fog_color: atmosphere.fog_color,
-                    ambient_color: atmosphere.fog_color,
+                    ambient_color: atmosphere.ambient_color,
                 })
             }
 
