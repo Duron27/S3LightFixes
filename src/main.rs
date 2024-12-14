@@ -5,7 +5,8 @@ use std::{
 };
 
 use openmw_cfg::{
-    config_path as openmw_cfg_dir, get_config as get_openmw_cfg, get_data_local_dir, get_plugins,
+    config_path as absolute_path_to_openmw_cfg, get_config as get_openmw_cfg, get_data_local_dir,
+    get_plugins,
 };
 use palette::{rgb::Srgb, FromColor, Hsv, IntoColor};
 use serde::{Deserialize, Serialize};
@@ -71,7 +72,7 @@ impl Default for LightConfig {
 }
 
 fn openmw_config_path() -> String {
-    let config_path = openmw_cfg_dir();
+    let config_path = absolute_path_to_openmw_cfg();
 
     if config_path
         .to_string_lossy()
@@ -184,7 +185,14 @@ fn main() -> Result<()> {
     let light_config = if let Some(light_config) = find_light_config(&userdata_dir) {
         load_light_config(light_config)
     } else {
-        let path: PathBuf = Path::new(&openmw_config_path()).join(DEFAULT_CONFIG_NAME);
+        let openmw_config_dir = PathBuf::from(&absolute_path_to_openmw_cfg())
+            .parent()
+            .expect("Unable to get config parent directory!")
+            .to_string_lossy()
+            .to_string();
+
+        let path: PathBuf = PathBuf::from(&openmw_config_dir).join(DEFAULT_CONFIG_NAME);
+
         let _ = write!(
             File::create(path).expect("Failed to create file"),
             "{}",
@@ -345,7 +353,7 @@ fn main() -> Result<()> {
             .find(|s| *s == PLUGIN_NAME);
 
         if let None = has_lightfixes_iter {
-            let config_path = format!("{}/openmw.cfg", openmw_config_path());
+            let config_path = absolute_path_to_openmw_cfg();
 
             if !read_to_string(&config_path)?.contains(PLUGIN_NAME) {
                 let mut file = OpenOptions::new().append(true).open(&config_path)?;
