@@ -48,8 +48,8 @@ More specifically, the lightfixes plugin adjusts the color and radius of colored
 S3LightFixes also supports portable installations of OpenMW by way of utilizing the `OPENMW_CONFIG` and `OPENMW_CONFIG_DIR` environment variables. Simply run it like so:
 - Powershell:
   ```
-  OPENMW_CONFIG="C:\Documents\My Games\OpenMW\openmw.cfg" .\s3lightfixes.exe
-  OPENMW_CONFIG_DIR="C:\Documents\My Games\OpenMW\" .\s3lightfixes.exe
+  $env:OPENMW_CONFIG="C:\Documents\My Games\OpenMW\openmw.cfg"; .\s3lightfixes.exe
+  $env:OPENMW_CONFIG_DIR="C:\Documents\My Games\OpenMW\"; .\s3lightfixes.exe
   ```
 - Linux:
   ```
