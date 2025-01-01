@@ -236,7 +236,7 @@ fn main() -> Result<()> {
         }
 
         let extension = match plugin_path.extension() {
-            Some(extension) => extension,
+            Some(extension) => extension.to_ascii_lowercase(),
             None => continue,
         };
 
