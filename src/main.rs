@@ -176,10 +176,16 @@ fn load_light_config(config_data: String) -> LightConfig {
 }
 
 fn main() -> Result<()> {
-    let mut config =
-        get_openmw_cfg().expect(&format!("{} {}!", GET_CONFIG_ERR, openmw_config_path()));
-    let plugins =
-        get_plugins(&config).expect(&format!("{} {}!", GET_PLUGINS_ERR, openmw_config_path()));
+    let mut config = match get_openmw_cfg() {
+        Ok(config) => config,
+        Err(error) => panic!("{}", &format!("{} {:#?}!", GET_CONFIG_ERR, error)),
+    };
+
+    let plugins = match get_plugins(&config) {
+        Ok(plugins) => plugins,
+        Err(error) => panic!("{}", &format!("{} {:#?}!", GET_PLUGINS_ERR, error)),
+    };
+
     let userdata_dir = get_data_local_dir(&config);
 
     let light_config = if let Some(light_config) = find_light_config(&userdata_dir) {
