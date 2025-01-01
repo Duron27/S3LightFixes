@@ -26,6 +26,7 @@ const DEFAULT_DO_LOG: bool = false;
 const GET_CONFIG_ERR: &str = "Failed to read openmw.cfg from";
 const GET_PLUGINS_ERR: &str = "Failed to read plugins in openmw.cfg from";
 const LOG_NAME: &str = "lightconfig.log";
+const NO_PLUGINS_ERR: &str = "No plugins were found in openmw.cfg! No lights to fix!";
 const PLUGIN_LOAD_FAILED_ERR: &str = "Failed to load plugin from {}: {}";
 const PLUGIN_NAME: &str = "S3LightFixes.omwaddon";
 const PLUGINS_MUST_EXIST_ERR: &str = "Plugins must exist to be loaded by openmw-cfg crate!";
@@ -195,6 +196,8 @@ fn main() -> Result<()> {
             &openmw_cfg::get_data_dirs(&config)
         );
     }
+
+    assert!(plugins.len() > 0, "{}", NO_PLUGINS_ERR);
 
     let userdata_dir = get_data_local_dir(&config);
 
