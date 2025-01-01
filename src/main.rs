@@ -1,4 +1,5 @@
 use std::{
+    env::var,
     fs::{create_dir_all, read_to_string, File, OpenOptions},
     io::{Result, Write},
     path::{Path, PathBuf},
@@ -186,6 +187,15 @@ fn main() -> Result<()> {
         Err(error) => panic!("{}", &format!("{} {:#?}!", GET_PLUGINS_ERR, error)),
     };
 
+    if var("S3L_DEBUG").is_ok() {
+        dbg!(
+            &openmw_cfg::config_path(),
+            &config,
+            &plugins,
+            &openmw_cfg::get_data_dirs(&config)
+        );
+    }
+
     let userdata_dir = get_data_local_dir(&config);
 
     let light_config = if let Some(light_config) = find_light_config(&userdata_dir) {
@@ -338,6 +348,10 @@ fn main() -> Result<()> {
                 .to_string();
             header.masters.insert(0, (plugin_string, plugin_size))
         }
+    }
+
+    if var("S3L_DEBUG").is_ok() {
+        dbg!(&header);
     }
 
     generated_plugin.objects.push(TES3Object::Header(header));
