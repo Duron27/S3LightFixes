@@ -27,7 +27,7 @@ const GET_CONFIG_ERR: &str = "Failed to read openmw.cfg from";
 const GET_PLUGINS_ERR: &str = "Failed to read plugins in openmw.cfg from";
 const LOG_NAME: &str = "lightconfig.log";
 const NO_PLUGINS_ERR: &str = "No plugins were found in openmw.cfg! No lights to fix!";
-const PLUGIN_LOAD_FAILED_ERR: &str = "Failed to load plugin from {}: {}";
+const PLUGIN_LOAD_FAILED_ERR: &str = "Failed to load plugin from";
 const PLUGIN_NAME: &str = "S3LightFixes.omwaddon";
 const PLUGINS_MUST_EXIST_ERR: &str = "Plugins must exist to be loaded by openmw-cfg crate!";
 const SHIT_GOT_REAL: &str = "Invalid value found when parsing light config!";
@@ -253,7 +253,12 @@ fn main() -> Result<()> {
         let mut plugin = match Plugin::from_path(plugin_path) {
             Ok(plugin) => plugin,
             Err(e) => {
-                eprintln!("{} {} {}", PLUGIN_LOAD_FAILED_ERR, plugin_path.display(), e);
+                eprintln!(
+                    "{} {}: {}",
+                    PLUGIN_LOAD_FAILED_ERR,
+                    plugin_path.display(),
+                    e
+                );
                 continue;
             }
         };
