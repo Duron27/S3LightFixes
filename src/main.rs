@@ -3,6 +3,7 @@ use std::{
     fs::{create_dir_all, read_to_string, File, OpenOptions},
     io::{Result, Write},
     path::{Path, PathBuf},
+    process::exit,
 };
 
 use openmw_cfg::{
@@ -177,15 +178,38 @@ fn load_light_config(config_data: String) -> LightConfig {
     }
 }
 
+fn notification_box(title: &str, message: &str) {
+    if var("S3L_NO_NOTIFICATIONS").is_err() {
+        let _ = native_dialog::MessageDialog::new()
+            .set_title(title)
+            .set_text(message)
+            .show_alert();
+    } else {
+        println!("{}", message);
+    }
+}
+
 fn main() -> Result<()> {
     let mut config = match get_openmw_cfg() {
         Ok(config) => config,
-        Err(error) => panic!("{}", &format!("{} {:#?}!", GET_CONFIG_ERR, error)),
+        Err(error) => {
+            notification_box(
+                &"Failed to read configuration file!",
+                &format!("{} {:#?}!", GET_CONFIG_ERR, error),
+            );
+            exit(127);
+        }
     };
 
     let plugins = match get_plugins(&config) {
         Ok(plugins) => plugins,
-        Err(error) => panic!("{}", &format!("{} {:#?}!", GET_PLUGINS_ERR, error)),
+        Err(error) => {
+            notification_box(
+                &"Failed to read plugins from config!",
+                &format!("{} {:#?}!", GET_PLUGINS_ERR, error),
+            );
+            exit(127);
+        }
     };
 
     if var("S3L_DEBUG").is_ok() {
@@ -401,6 +425,14 @@ fn main() -> Result<()> {
         let mut file = File::create(path)?;
         let _ = write!(file, "{}", format!("{:#?}", &generated_plugin));
     }
+
+    notification_box(
+        &"Lightfixes successful!",
+        &format!(
+            "S3LightFixes.omwaddon generated, enabled, and saved in {}",
+            openmw_cfg::get_data_local_dir(&config)
+        ),
+    );
 
     Ok(())
 }
