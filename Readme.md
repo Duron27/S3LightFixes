@@ -16,6 +16,8 @@ Just download the executable for your OS and run it however's most convenient. D
 
 That's it. Just go check for the `S3LightFixes.omwaddon` in the launcher. If it's there, everything worked. If it's not, a giant error message should have appeared in your face.
 
+If you have to do anything else, if you *think* you have to do anything else, if it's not Just Working with almost no input from you at all - ask for help.
+
 That's it.
 
 Go away.
