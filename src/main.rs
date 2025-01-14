@@ -180,10 +180,13 @@ fn load_light_config(config_data: String) -> LightConfig {
 
 fn notification_box(title: &str, message: &str) {
     if var("S3L_NO_NOTIFICATIONS").is_err() {
+        #[cfg(not(target_os = "android"))]
         let _ = native_dialog::MessageDialog::new()
             .set_title(title)
             .set_text(message)
             .show_alert();
+        #[cfg(target_os = "android")]
+        println!("{}", message);
     } else {
         println!("{}", message);
     }
