@@ -24,6 +24,7 @@ const DEFAULT_AUTO_INSTALL: bool = true;
 const DEFAULT_CONFIG_NAME: &str = "lightconfig.toml";
 const DEFAULT_DISABLE_FLICKER: bool = true;
 const DEFAULT_DO_LOG: bool = false;
+const EMPTY_HEADER_ERR: &str = "The generated plugin was not found to have any master files! It's empty! Try running lightfixes again using the S3L_DEBUG environment variable";
 const GET_CONFIG_ERR: &str = "Failed to read openmw.cfg from";
 const GET_PLUGINS_ERR: &str = "Failed to read plugins in openmw.cfg from";
 const LOG_NAME: &str = "lightconfig.log";
@@ -388,6 +389,8 @@ fn main() -> Result<()> {
     if var("S3L_DEBUG").is_ok() {
         dbg!(&header);
     }
+
+    assert!(header.masters.len() > 0, "{}", EMPTY_HEADER_ERR);
 
     generated_plugin.objects.push(TES3Object::Header(header));
     generated_plugin.sort_objects();
