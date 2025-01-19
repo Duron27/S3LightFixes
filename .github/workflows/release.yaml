@@ -30,11 +30,11 @@ jobs:
             archive: windows-latest.zip
     runs-on: ${{ matrix.os }}
     permissions: write-all
+    env:
+      SIGN_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@nightly
-      - env:
-          SIGN_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
 
       - name: build
         run: cargo build --release
