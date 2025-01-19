@@ -40,8 +40,8 @@ jobs:
       - uses: sigstore/cosign-installer@main
       - name: sign
         run: |
-          echo COSIGN_PUBLIC_KEY
-          echo COSIGN_PRIVATE_KEY > private.key
+          echo $COSIGN_PUBLIC_KEY
+          echo $COSIGN_PRIVATE_KEY > private.key
           cosign sign-blob -y --key private.key ./target/release/${{ matrix.binary }} --bundle S3LF-${{ matrix.os }}.bundle
           rm -rf private.key
 
