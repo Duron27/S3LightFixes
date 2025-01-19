@@ -30,8 +30,6 @@ jobs:
             archive: windows-latest.zip
     runs-on: ${{ matrix.os }}
     permissions: write-all
-    env:
-      SIGN_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@nightly
@@ -41,9 +39,7 @@ jobs:
 
       - uses: sigstore/cosign-installer@main
       - name: sign
-        run: |
-          printf "%s" $SIGN_KEY > private.key
-          cosign sign-blob -y --key private.key ./target/release/${{ matrix.binary }} --bundle S3LF-${{ matrix.os }}.bundle
+        run: cosign sign-blob -y ./target/release/${{ matrix.binary }} --bundle S3LF-${{ matrix.os }}.bundle
 
       - name: compress
         run: 7z a -tzip ${{matrix.archive}} S3LF-${{ matrix.os }}.bundle ./target/release/${{matrix.binary}}
