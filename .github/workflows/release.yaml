@@ -42,7 +42,7 @@ jobs:
       - uses: sigstore/cosign-installer@main
       - name: sign
         run: |
-          printf "$SIGN_KEY" > private.key
+          printf "%s" $SIGN_KEY > private.key
           cosign sign-blob -y --key private.key ./target/release/${{ matrix.binary }} --bundle S3LF-${{ matrix.os }}.bundle
 
       - name: compress
