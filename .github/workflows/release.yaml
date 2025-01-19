@@ -39,7 +39,7 @@ jobs:
 
       - uses: sigstore/cosign-installer@main
       - name: sign
-      - with:
+      - env:
           SIGN_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         run: |
           echo $SIGN_KEY > private.key
