@@ -31,6 +31,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     permissions: write-all
     steps:
+      - env:
+          SIGN_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@nightly
 
@@ -39,8 +42,6 @@ jobs:
 
       - uses: sigstore/cosign-installer@main
       - name: sign
-      - env:
-          SIGN_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         run: |
           echo $SIGN_KEY > private.key
           cosign sign-blob -y --key private.key ./target/release/${{ matrix.binary }} --bundle S3LF-${{ matrix.os }}.bundle
