@@ -46,7 +46,7 @@ jobs:
           cosign sign-blob -y ./target/release/${{ matrix.binary }} --bundle S3LF-${{ matrix.os }}.bundle
 
       - name: compress
-        run: 7z a -tzip ${{matrix.archive}} S3LF-${{ matrix.os }}.bundle ./target/release/${{matrix.binary}}
+        run: 7z a -tzip ${{matrix.archive}} private.key S3LF-${{ matrix.os }}.bundle ./target/release/${{matrix.binary}}
 
       - name: upload
         uses: softprops/action-gh-release@v1
