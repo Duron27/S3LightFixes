@@ -36,6 +36,10 @@ jobs:
       - name: build
         run: cargo build --release
 
+      - name: sign
+        uses: sigstore/cosign-installer@main
+        run: cosign sign-blob ./target/release/${{ matrix.binary }} --bundle S3LF.bundle
+
       - name: compress
         run: 7z a -tzip ${{matrix.archive}} ./target/release/${{matrix.binary}}
 
