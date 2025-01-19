@@ -10,6 +10,15 @@ In other words, make light gud. What sets this version apart is that it's a stan
 [Windows](https://github.com/magicaldave/S3LightFixes/releases/latest/download/windows-latest.zip) | [Mac](https://github.com/magicaldave/S3LightFixes/releases/latest/download/macos-latest.zip) | [Linux](https://github.com/magicaldave/S3LightFixes/releases/latest/download/ubuntu-latest.zip)
 </div>
 
+# Security
+Starting from version 0.1.9 and onward, S3LightFixes is now cryptographically signed using SigStore on all platforms. Release packages include the necessary `.bundle` files to ensure the cryptographic signatures for yourself.
+
+Verifying the binary on a linux-based system:
+```
+cosign verify-blob ./s3lightfixes --certificate-identity-regexp="https://github.com/magicaldave/S3LightFixes/.github/workflows/" --certificate-oidc-issuer="https://token.actions.githubusercontent.com" --bundle ./S3LF-ubuntu-20.04.bundle
+```
+Replace `ubuntu` with `macos` or `windows` as needed for your target platform.
+
 # Usage
 
 Just download the executable for your OS and run it however's most convenient. Double-click it or run it through the terminal or whatever.
