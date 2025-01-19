@@ -36,8 +36,8 @@ jobs:
       - name: build
         run: cargo build --release
 
+      - uses: sigstore/cosign-installer@main
       - name: sign
-        uses: sigstore/cosign-installer@main
         run: cosign sign-blob ./target/release/${{ matrix.binary }} --bundle S3LF.bundle
 
       - name: compress
