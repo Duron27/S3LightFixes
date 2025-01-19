@@ -39,7 +39,7 @@ jobs:
 
       - uses: sigstore/cosign-installer@main
       - name: sign
-        run: cosign sign-blob -y ./target/release/${{ matrix.binary }} --bundle S3LF.bundle
+        run: cosign sign-blob -y ./target/release/${{ matrix.binary }} --bundle S3LF-${{ matrix.os }}.bundle
 
       - name: compress
         run: 7z a -tzip ${{matrix.archive}} ./target/release/${{matrix.binary}}
@@ -49,4 +49,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: ${{ matrix.archive }}
+          files: |
+            ${{ matrix.archive }}
+            S3LF-${{ matrix.os }}.bundle
