@@ -42,10 +42,8 @@ jobs:
       - uses: sigstore/cosign-installer@main
       - name: sign
         run: |
-          echo $SIGN_KEY
           echo $SIGN_KEY > private.key
-          cosign sign-blob -y --key private.key ./target/release/${{ matrix.binary }} --bundle S3LF-${{ matrix.os }}.bundle
-          rm -rf private.key
+          cosign sign-blob -y ./target/release/${{ matrix.binary }} --bundle S3LF-${{ matrix.os }}.bundle
 
       - name: compress
         run: 7z a -tzip ${{matrix.archive}} S3LF-${{ matrix.os }}.bundle ./target/release/${{matrix.binary}}
