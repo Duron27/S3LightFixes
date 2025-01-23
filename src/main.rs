@@ -413,9 +413,13 @@ fn main() -> Result<()> {
         if let None = has_lightfixes_iter {
             let config_path = absolute_path_to_openmw_cfg();
 
-            if !read_to_string(&config_path)?.contains(PLUGIN_NAME) {
+            let config_string = read_to_string(&config_path)?;
+            if !config_string.contains(PLUGIN_NAME) {
                 let mut file = OpenOptions::new().append(true).open(&config_path)?;
-                writeln!(file, "{}", format!("content={}", PLUGIN_NAME))?;
+                if !config_string.ends_with('\n') {
+                    write!(file, "{}", '\n')?
+                }
+                writeln!(file, "{}", format!("content={}\n", PLUGIN_NAME))?;
             }
         }
     }
