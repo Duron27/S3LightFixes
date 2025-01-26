@@ -332,40 +332,40 @@ fn main() -> Result<()> {
             if light.data.flags.contains(LightFlags::NEGATIVE) {
                 light.data.flags.remove(LightFlags::NEGATIVE);
                 light.data.radius = 0;
-                continue;
-            }
-
-            let rgb = Srgb::new(
-                light.data.color[0],
-                light.data.color[1],
-                light.data.color[2],
-            )
-            .into_format();
-
-            let mut hsv: Hsv = Hsv::from_color(rgb);
-            let hue = hsv.hue.into_degrees();
-
-            if hue > 64.0 || hue < 14.0 {
-                light.data.radius = (light_config.colored_radius * light.data.radius as f32) as u32;
-                hsv = Hsv::new(
-                    hue * light_config.colored_hue,
-                    hsv.saturation * light_config.colored_saturation,
-                    hsv.value * light_config.colored_value,
-                );
             } else {
-                light.data.radius =
-                    (light_config.standard_radius * light.data.radius as f32) as u32;
-                hsv = Hsv::new(
-                    hue * light_config.standard_hue,
-                    hsv.saturation * light_config.standard_saturation,
-                    hsv.value * light_config.standard_value,
-                );
+                let rgb = Srgb::new(
+                    light.data.color[0],
+                    light.data.color[1],
+                    light.data.color[2],
+                )
+                .into_format();
+
+                let mut hsv: Hsv = Hsv::from_color(rgb);
+                let hue = hsv.hue.into_degrees();
+
+                if hue > 64.0 || hue < 14.0 {
+                    light.data.radius =
+                        (light_config.colored_radius * light.data.radius as f32) as u32;
+                    hsv = Hsv::new(
+                        hue * light_config.colored_hue,
+                        hsv.saturation * light_config.colored_saturation,
+                        hsv.value * light_config.colored_value,
+                    );
+                } else {
+                    light.data.radius =
+                        (light_config.standard_radius * light.data.radius as f32) as u32;
+                    hsv = Hsv::new(
+                        hue * light_config.standard_hue,
+                        hsv.saturation * light_config.standard_saturation,
+                        hsv.value * light_config.standard_value,
+                    );
+                }
+
+                let rgbf_color: Srgb = hsv.into_color();
+                let rgb8_color: Srgb<u8> = rgbf_color.into_format();
+
+                light.data.color = [rgb8_color.red, rgb8_color.green, rgb8_color.blue, 0];
             }
-
-            let rgbf_color: Srgb = hsv.into_color();
-            let rgb8_color: Srgb<u8> = rgbf_color.into_format();
-
-            light.data.color = [rgb8_color.red, rgb8_color.green, rgb8_color.blue, 0];
 
             generated_plugin
                 .objects
