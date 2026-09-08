@@ -214,7 +214,14 @@ mod tests {
     }
 }
 
+#[cfg(target_os = "android")]
 #[unsafe(no_mangle)]
-pub extern "C" fn s3lightfixes_run() {
-    let _ = run();
+pub extern "C" fn s3lightfixes_run() -> std::os::raw::c_int {
+    match run() {
+        Ok(()) => 0,
+        Err(e) => {
+            eprintln!("Error in s3lightfixes: {e}");
+            1
+        }
+    }
 }
