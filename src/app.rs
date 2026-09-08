@@ -78,7 +78,7 @@ fn selected_config_file_path(config: &openmw_config::OpenMWConfiguration) -> Pat
 fn plugin_log_name(plugin_path: &Path) -> String {
     plugin_path.file_name().map_or_else(
         || plugin_path.display().to_string(),
-        |name| name.to_string_lossy().to_string(),
+                                        |name| name.to_string_lossy().to_string(),
     )
 }
 
@@ -90,9 +90,9 @@ fn explicit_config_path(args: &LightArgs) -> Result<Option<PathBuf>, String> {
     if path.is_file() {
         if path.file_name().is_some_and(|name| name == "openmw.cfg") {
             let parent = path
-                .parent()
-                .filter(|parent| !parent.as_os_str().is_empty())
-                .unwrap_or_else(|| Path::new("."));
+            .parent()
+            .filter(|parent| !parent.as_os_str().is_empty())
+            .unwrap_or_else(|| Path::new("."));
             let config_dir = if parent.is_relative() {
                 parent.canonicalize().map_err(|error| {
                     format!(
@@ -151,7 +151,7 @@ fn load_openmw_config(
             notification_box(
                 "Failed to read configuration file!",
                 &error.to_string(),
-                no_notifications,
+                             no_notifications,
             );
 
             exit(127);
@@ -164,9 +164,9 @@ fn content_files_or_exit(
     no_notifications: bool,
 ) -> Vec<String> {
     let content_files = config
-        .content_files_iter()
-        .map(|plugin| plugin.value_str().to_owned())
-        .collect::<Vec<_>>();
+    .content_files_iter()
+    .map(|plugin| plugin.value_str().to_owned())
+    .collect::<Vec<_>>();
 
     if content_files.is_empty() {
         notification_box(
@@ -186,29 +186,29 @@ fn load_plugins<'a>(
     vfs: &'a VFS,
 ) -> Vec<LoadedPlugin<'a>> {
     content_files
-        .par_iter()
-        .rev()
-        .filter_map(|plugin| {
-            let vfs_file = vfs.get_file(plugin.as_str())?;
-            let path = vfs_file.path();
+    .par_iter()
+    .rev()
+    .filter_map(|plugin| {
+        let vfs_file = vfs.get_file(plugin.as_str())?;
+        let path = vfs_file.path();
 
-            if !is_fixable_plugin(path) || light_config.is_excluded_plugin(path) {
-                return None;
-            }
+        if !is_fixable_plugin(path) || light_config.is_excluded_plugin(path) {
+            return None;
+        }
 
-            match Plugin::from_path_filtered(path, |tag| matches!(&tag, Cell::TAG | Light::TAG)) {
-                Ok(plugin) => Some((plugin, path)),
+        match Plugin::from_path_filtered(path, |tag| matches!(&tag, Cell::TAG | Light::TAG)) {
+            Ok(plugin) => Some((plugin, path)),
                 Err(err) => {
                     eprintln!(
                         "[ WARNING ]: Plugin {}: could not be loaded due to error: {}. Continuing light fixes without this mod .  . . Everything will be okay. Yes, it's still working.\n",
                         path.display(),
-                        err
+                              err
                     );
                     None
                 }
-            }
-        })
-        .collect::<Vec<_>>()
+        }
+    })
+    .collect::<Vec<_>>()
 }
 
 fn apply_cell_ambient_overrides(
@@ -327,8 +327,8 @@ fn process_cells(
                         logs.push(RecordLog {
                             kind: "CELL",
                             plugin: plugin_name.to_owned(),
-                            id: cell_id.clone(),
-                            changes,
+                                  id: cell_id.clone(),
+                                  changes,
                         });
                     }
                 }
@@ -354,32 +354,32 @@ fn process_lights(
     let mut used_objects = 0;
 
     plugin
-        .into_objects_of_type::<Light>()
-        .filter_map(|light| {
-            let light_id = light.editor_id_ascii_lowercase().into_owned();
+    .into_objects_of_type::<Light>()
+    .filter_map(|light| {
+        let light_id = light.editor_id_ascii_lowercase().into_owned();
 
-            if !used_ids.contains(&light_id) && !light_config.is_excluded_id(&light_id) {
-                used_ids.insert(light_id);
-                Some(light)
-            } else {
-                None
-            }
-        })
-        .for_each(|mut light| {
-            let changes = process_light(light_config, &mut light);
+        if !used_ids.contains(&light_id) && !light_config.is_excluded_id(&light_id) {
+            used_ids.insert(light_id);
+            Some(light)
+        } else {
+            None
+        }
+    })
+    .for_each(|mut light| {
+        let changes = process_light(light_config, &mut light);
 
-            if !changes.is_empty() {
-                logs.push(RecordLog {
-                    kind: "LIGH",
-                    plugin: plugin_name.to_owned(),
-                    id: light.id.clone(),
-                    changes,
-                });
-            }
+        if !changes.is_empty() {
+            logs.push(RecordLog {
+                kind: "LIGH",
+                plugin: plugin_name.to_owned(),
+                      id: light.id.clone(),
+                      changes,
+            });
+        }
 
-            generated_plugin.objects.push(light.into());
-            used_objects += 1;
-        });
+        generated_plugin.objects.push(light.into());
+        used_objects += 1;
+    });
 
     used_objects
 }
@@ -441,7 +441,7 @@ fn generate_plugin(
 
         if used_objects > 0 {
             let (plugin_string, plugin_size) =
-                plugin_master(plugin_path, light_config.no_notifications)?;
+            plugin_master(plugin_path, light_config.no_notifications)?;
 
             header.masters.insert(0, (plugin_string, plugin_size));
             header.num_objects += used_objects;
@@ -450,8 +450,8 @@ fn generate_plugin(
 
     Ok(GenerationResult {
         plugin,
-        header,
-        logs,
+       header,
+       logs,
     })
 }
 
@@ -512,14 +512,14 @@ fn auto_enable_plugin(
                 notification_box(
                     "Failed to resave openmw.cfg!",
                     &err.to_string(),
-                    light_config.no_notifications,
+                                 light_config.no_notifications,
                 );
                 false
             } else {
                 let lightfix_enabled_msg = format!(
                     "Wrote selected OpenMW config at {} successfully! Backup saved at {}.",
                     selected_config_file.display(),
-                    backup_path.display()
+                                                   backup_path.display()
                 );
                 notification_box(
                     "Lightfixes enabled!",
@@ -636,9 +636,9 @@ pub fn run() -> io::Result<()> {
         println!(
             "Validated {} successfully",
             config
-                .user_config_path()
-                .join(crate::DEFAULT_CONFIG_NAME)
-                .display()
+            .user_config_path()
+            .join(crate::DEFAULT_CONFIG_NAME)
+            .display()
         );
         return Ok(());
     }
@@ -658,9 +658,9 @@ pub fn run() -> io::Result<()> {
 
     let content_files = content_files_or_exit(&config, light_config.no_notifications);
     let directories = config
-        .data_directories_iter()
-        .map(openmw_config::DirectorySetting::parsed)
-        .collect::<Vec<_>>();
+    .data_directories_iter()
+    .map(openmw_config::DirectorySetting::parsed)
+    .collect::<Vec<_>>();
     let vfs = VFS::from_directories(directories, None);
     let plugins = load_plugins(&content_files, &light_config, &vfs);
     let loaded_plugins = plugins.len();
@@ -678,9 +678,9 @@ pub fn run() -> io::Result<()> {
         &selected_config_file,
         &output_dir,
         content_files.len(),
-        loaded_plugins,
-        &header,
-        &logs,
+                                    loaded_plugins,
+                                    &header,
+                                    &logs,
     );
 
     if header.masters.is_empty() {
@@ -713,7 +713,7 @@ pub fn run() -> io::Result<()> {
         notification_box(
             "Failed to save plugin!",
             &err.to_string(),
-            light_config.no_notifications,
+                         light_config.no_notifications,
         );
     })?;
 
@@ -773,7 +773,7 @@ mod tests {
         let path = std::env::temp_dir().join(format!(
             "s3lightfixes-{name}-{}-{}",
             std::process::id(),
-            NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
+                                                     NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
         ));
         std::fs::write(&path, vec![0; size]).unwrap();
 
@@ -876,7 +876,7 @@ mod tests {
     #[test]
     fn dry_run_and_validate_config_conflict_with_each_other() {
         let err = LightArgs::try_parse_from(["s3lightfixes", "--dry-run", "--validate-config"])
-            .unwrap_err();
+        .unwrap_err();
 
         assert_eq!(err.kind(), clap::error::ErrorKind::ArgumentConflict);
     }
@@ -906,7 +906,7 @@ mod tests {
         let temp_dir = std::env::temp_dir().join(format!(
             "s3lightfixes-openmw-backup-{}-{}",
             std::process::id(),
-            NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
+                                                         NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
         ));
         std::fs::create_dir(&temp_dir).unwrap();
         let selected_config = temp_dir.join("openmw.cfg");
@@ -917,7 +917,7 @@ mod tests {
         assert_eq!(backup_path, temp_dir.join("openmw.cfg.s3lightfixes.bak"));
         assert_eq!(
             std::fs::read_to_string(backup_path).unwrap(),
-            "content=Morrowind.esm\n"
+                   "content=Morrowind.esm\n"
         );
 
         let _ = std::fs::remove_dir_all(temp_dir);
@@ -928,7 +928,7 @@ mod tests {
         let temp_dir = std::env::temp_dir().join(format!(
             "s3lightfixes-openmw-dir-{}-{}",
             std::process::id(),
-            NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
+                                                         NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
         ));
         std::fs::create_dir(&temp_dir).unwrap();
         let selected_config = temp_dir.join("openmw.cfg");
@@ -941,11 +941,11 @@ mod tests {
 
         assert_eq!(
             explicit_config_path(&args)
-                .unwrap()
-                .unwrap()
-                .canonicalize()
-                .unwrap(),
-            temp_dir.canonicalize().unwrap()
+            .unwrap()
+            .unwrap()
+            .canonicalize()
+            .unwrap(),
+                   temp_dir.canonicalize().unwrap()
         );
 
         let _ = std::fs::remove_dir_all(temp_dir);
@@ -956,7 +956,7 @@ mod tests {
         let temp_dir = std::env::temp_dir().join(format!(
             "s3lightfixes-openmw-file-{}-{}",
             std::process::id(),
-            NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
+                                                         NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
         ));
         std::fs::create_dir(&temp_dir).unwrap();
         let selected_config = temp_dir.join("openmw.cfg");
@@ -977,7 +977,7 @@ mod tests {
         let temp_dir = std::env::temp_dir().join(format!(
             "s3lightfixes-openmw-custom-file-{}-{}",
             std::process::id(),
-            NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
+                                                         NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
         ));
         std::fs::create_dir(&temp_dir).unwrap();
         let selected_config = temp_dir.join("friend-requested.cfg");
@@ -990,10 +990,10 @@ mod tests {
 
         assert_eq!(
             explicit_config_path(&args).unwrap_err(),
-            format!(
-                "Explicit --openmw-cfg file {} must be named openmw.cfg",
-                selected_config.display()
-            )
+                   format!(
+                       "Explicit --openmw-cfg file {} must be named openmw.cfg",
+                       selected_config.display()
+                   )
         );
 
         let _ = std::fs::remove_dir_all(temp_dir);
@@ -1005,7 +1005,7 @@ mod tests {
         let temp_dir = std::env::temp_dir().join(format!(
             "s3lightfixes-openmw-symlink-file-{}-{}",
             std::process::id(),
-            NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
+                                                         NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
         ));
         std::fs::create_dir(&temp_dir).unwrap();
         let target_config = temp_dir.join("openmw.cfg");
@@ -1020,10 +1020,10 @@ mod tests {
 
         assert_eq!(
             explicit_config_path(&args).unwrap_err(),
-            format!(
-                "Explicit --openmw-cfg file {} must be named openmw.cfg",
-                symlink_config.display()
-            )
+                   format!(
+                       "Explicit --openmw-cfg file {} must be named openmw.cfg",
+                       symlink_config.display()
+                   )
         );
 
         let _ = std::fs::remove_dir_all(temp_dir);
@@ -1034,7 +1034,7 @@ mod tests {
         let temp_dir = std::env::temp_dir().join(format!(
             "s3lightfixes-openmw-root-chain-{}-{}",
             std::process::id(),
-            NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
+                                                         NEXT_TEMP_FILE.fetch_add(1, Ordering::Relaxed)
         ));
         let root_dir = temp_dir.join("root");
         let user_dir = temp_dir.join("user");
@@ -1052,7 +1052,7 @@ mod tests {
         .unwrap();
         std::fs::write(&user_config, "content=Morrowind.esm\n").unwrap();
         let mut openmw_config =
-            openmw_config::OpenMWConfiguration::new(Some(root_dir.clone())).unwrap();
+        openmw_config::OpenMWConfiguration::new(Some(root_dir.clone())).unwrap();
         let light_config = LightConfig {
             auto_enable: true,
             no_notifications: true,
@@ -1069,18 +1069,18 @@ mod tests {
 
         assert_eq!(
             std::fs::read_to_string(&root_config).unwrap(),
-            format!(
-                "data=/engine/root\nconfig={}\ncontent=RootOnly.esm\n",
-                user_dir.display()
-            )
+                   format!(
+                       "data=/engine/root\nconfig={}\ncontent=RootOnly.esm\n",
+                       user_dir.display()
+                   )
         );
         assert_eq!(
             std::fs::read_to_string(&user_config).unwrap(),
-            "content=Morrowind.esm\ncontent=S3LightFixes.omwaddon\n"
+                   "content=Morrowind.esm\ncontent=S3LightFixes.omwaddon\n"
         );
         assert_eq!(
             std::fs::read_to_string(user_dir.join("openmw.cfg.s3lightfixes.bak")).unwrap(),
-            "content=Morrowind.esm\n"
+                   "content=Morrowind.esm\n"
         );
         assert!(!root_dir.join("openmw.cfg.s3lightfixes.bak").exists());
 
@@ -1124,11 +1124,11 @@ mod tests {
         let plugins = vec![
             (
                 plugin_with_lights([light("Shared_Light", 300), light("later_only", 301)]),
-                later_path.as_path(),
+             later_path.as_path(),
             ),
             (
                 plugin_with_lights([light("shared_light", 100), light("earlier_only", 101)]),
-                earlier_path.as_path(),
+             earlier_path.as_path(),
             ),
         ];
 
@@ -1138,11 +1138,11 @@ mod tests {
         assert_eq!(lights.len(), 3);
         assert_eq!(
             lights
-                .iter()
-                .find(|light| light.id.eq_ignore_ascii_case("shared_light"))
-                .unwrap()
-                .data
-                .radius,
+            .iter()
+            .find(|light| light.id.eq_ignore_ascii_case("shared_light"))
+            .unwrap()
+            .data
+            .radius,
             300
         );
         assert!(lights.iter().any(|light| light.id == "later_only"));
@@ -1159,15 +1159,15 @@ mod tests {
         let plugins = vec![
             (
                 plugin_with_lights([light("shared", 100)]),
-                contributing_a.as_path(),
+             contributing_a.as_path(),
             ),
             (
                 plugin_with_lights([light("shared", 200)]),
-                duplicate_only.as_path(),
+             duplicate_only.as_path(),
             ),
             (
                 plugin_with_lights([light("unique", 300)]),
-                contributing_c.as_path(),
+             contributing_c.as_path(),
             ),
         ];
 
@@ -1179,21 +1179,21 @@ mod tests {
             vec![
                 (
                     contributing_c
-                        .as_path()
-                        .file_name()
-                        .unwrap()
-                        .to_string_lossy()
-                        .to_string(),
-                    17
+                    .as_path()
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string(),
+                 17
                 ),
                 (
                     contributing_a
-                        .as_path()
-                        .file_name()
-                        .unwrap()
-                        .to_string_lossy()
-                        .to_string(),
-                    11
+                    .as_path()
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string(),
+                 11
                 ),
             ]
         );
@@ -1205,59 +1205,59 @@ mod tests {
         let second_processed = temp_plugin_file("second_processed.esp", 13);
         let mut light_config = config();
         light_config
-            .excluded_id_regexes
-            .push(Regex::new("excluded").unwrap());
+        .excluded_id_regexes
+        .push(Regex::new("excluded").unwrap());
         let plugins = vec![
             (
                 plugin_with_lights([
                     light("duplicate_light", 10),
-                    Light {
-                        id: "negative_light".to_owned(),
-                        data: LightData {
-                            radius: 20,
-                            color: [255, 128, 0, 0],
-                            flags: LightFlags::NEGATIVE,
-                            ..LightData::default()
-                        },
-                        ..Light::default()
-                    },
-                    light("excluded_light", 30),
+                                   Light {
+                                       id: "negative_light".to_owned(),
+                                   data: LightData {
+                                       radius: 20,
+                                       color: [255, 128, 0, 0],
+                                       flags: LightFlags::NEGATIVE,
+                                       ..LightData::default()
+                                   },
+                                   ..Light::default()
+                                   },
+                                   light("excluded_light", 30),
                 ]),
-                first_processed.as_path(),
+             first_processed.as_path(),
             ),
             (
                 plugin_with_lights([
                     light("duplicate_light", 99),
-                    light("second_unique_light", 40),
+                                   light("second_unique_light", 40),
                 ]),
-                second_processed.as_path(),
+             second_processed.as_path(),
             ),
         ];
 
         let mut result = generate_plugin(plugins, &light_config).unwrap();
         result
-            .plugin
-            .objects
-            .push(TES3Object::Header(result.header));
+        .plugin
+        .objects
+        .push(TES3Object::Header(result.header));
         result.plugin.sort_objects();
 
         let generated = generated_lights(&result.plugin);
         assert_eq!(generated.len(), 3);
         assert!(
             generated
-                .iter()
-                .any(|light| light.id == "duplicate_light" && light.data.radius == 10)
+            .iter()
+            .any(|light| light.id == "duplicate_light" && light.data.radius == 10)
         );
         assert!(generated.iter().all(|light| light.id != "excluded_light"));
         assert!(
             generated
-                .iter()
-                .any(|light| light.id == "second_unique_light" && light.data.radius == 40)
+            .iter()
+            .any(|light| light.id == "second_unique_light" && light.data.radius == 40)
         );
         let negative = generated
-            .iter()
-            .find(|light| light.id == "negative_light")
-            .unwrap();
+        .iter()
+        .find(|light| light.id == "negative_light")
+        .unwrap();
         assert_eq!(negative.data.radius, 0);
         assert!(!negative.data.flags.contains(LightFlags::NEGATIVE));
 
@@ -1274,8 +1274,8 @@ mod tests {
     fn process_lights_skips_excluded_ids_that_would_otherwise_emit() {
         let mut light_config = config();
         light_config
-            .excluded_id_regexes
-            .push(Regex::new("excluded_light").unwrap());
+        .excluded_id_regexes
+        .push(Regex::new("excluded_light").unwrap());
         let source_plugin = plugin_with_lights([light("excluded_light", 100), light("kept", 200)]);
         let mut generated_plugin = Plugin::new();
         let mut used_ids = HashSet::new();
@@ -1349,24 +1349,24 @@ mod tests {
         let mut light_config = config();
         light_config.ambient_regexes.push((
             Regex::new("ambient_cell").unwrap(),
-            CustomCellAmbient {
-                ambient: Some(TypedLightColor {
-                    red: 0,
-                    green: 255,
-                    blue: 255,
-                }),
-                sunlight: Some(TypedLightColor {
-                    red: 0,
-                    green: 0,
-                    blue: 255,
-                }),
-                fog: Some(TypedLightColor {
-                    red: 0,
-                    green: 255,
-                    blue: 0,
-                }),
-                fog_density: Some(0.75),
-            },
+                                           CustomCellAmbient {
+                                               ambient: Some(TypedLightColor {
+                                                   red: 0,
+                                                   green: 255,
+                                                   blue: 255,
+                                               }),
+                                               sunlight: Some(TypedLightColor {
+                                                   red: 0,
+                                                   green: 0,
+                                                   blue: 255,
+                                               }),
+                                               fog: Some(TypedLightColor {
+                                                   red: 0,
+                                                   green: 255,
+                                                   blue: 0,
+                                               }),
+                                               fog_density: Some(0.75),
+                                           },
         ));
         let mut source_plugin = Plugin {
             objects: vec![interior_cell("ambient_cell").into()],
@@ -1402,13 +1402,13 @@ mod tests {
         assert_eq!(logs[0].id, "ambient_cell");
         assert!(
             logs[0]
-                .changes
-                .contains(&"ambient [1, 2, 3, 0] -> [0, 255, 255, 0]".to_owned())
+            .changes
+            .contains(&"ambient [1, 2, 3, 0] -> [0, 255, 255, 0]".to_owned())
         );
         assert!(
             logs[0]
-                .changes
-                .contains(&"sunlight [4, 5, 6, 0] -> [0, 0, 255, 0]".to_owned())
+            .changes
+            .contains(&"sunlight [4, 5, 6, 0] -> [0, 0, 255, 0]".to_owned())
         );
     }
 
@@ -1437,7 +1437,7 @@ mod tests {
         assert_eq!(cells.len(), 1);
         assert_eq!(
             cells[0].atmosphere_data.as_ref().unwrap().sunlight_color,
-            [0, 0, 0, 0]
+                   [0, 0, 0, 0]
         );
         assert!(cells[0].references.is_empty());
         assert!(cells[0].water_height.is_none());
@@ -1445,8 +1445,8 @@ mod tests {
         assert_eq!(logs.len(), 1);
         assert!(
             logs[0]
-                .changes
-                .contains(&"sunlight [4, 5, 6, 0] -> [0, 0, 0, 0]".to_owned())
+            .changes
+            .contains(&"sunlight [4, 5, 6, 0] -> [0, 0, 0, 0]".to_owned())
         );
     }
 
@@ -1497,8 +1497,8 @@ mod tests {
         let mut light_config = config();
         light_config.disable_interior_sun = true;
         light_config
-            .excluded_id_regexes
-            .push(Regex::new("excluded_cell").unwrap());
+        .excluded_id_regexes
+        .push(Regex::new("excluded_cell").unwrap());
         let mut used_ids = HashSet::from(["duplicate_cell".to_owned()]);
         let mut source_plugin = Plugin {
             objects: vec![

@@ -43,20 +43,36 @@ pub fn is_fixable_plugin(plug_path: &Path) -> bool {
         })
 }
 
+#[cfg(target_os = "android")]
+use android_logger;
+
+#[cfg(target_os = "android")]
+fn init_logging() {
+    android_logger::init_once(
+        android_logger::Config::default()
+        .with_max_level(log::LevelFilter::Debug)
+        .with_tag("s3lightfixes"),
+    );
+}
+
 /// Displays a notification taking title and message as argument
 pub fn notification_box(title: &str, message: &str, no_notifications: bool) {
     #[cfg(target_os = "android")]
-    println!("{message}");
+    {
+        // Use Android logging instead of println
+        log::info!("{}: {}", title, message);
+        // If you want to show a toast, you'd need JNI
+    }
 
     #[cfg(not(target_os = "android"))]
     if no_notifications {
         println!("{message}");
     } else {
         let _ = native_dialog::DialogBuilder::message()
-            .set_title(title)
-            .set_text(message)
-            .alert()
-            .show();
+        .set_title(title)
+        .set_text(message)
+        .alert()
+        .show();
     }
 }
 
@@ -220,10 +236,17 @@ pub extern "C" fn Java_org_openmw_utils_S3LightFixesNative_run(
     _env: *mut std::ffi::c_void,
     _class: *mut std::ffi::c_void,
 ) -> std::os::raw::c_int {
+    init_logging();
+
+    log::debug!("S3LightFixes called from Android");
+
     match run() {
-        Ok(()) => 0,
+        Ok(()) => {
+            log::debug!("S3LightFixes completed successfully");
+            0
+        }
         Err(e) => {
-            eprintln!("Error in s3lightfixes: {e}");
+            log::error!("Error in s3lightfixes: {}", e);
             1
         }
     }
