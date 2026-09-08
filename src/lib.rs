@@ -214,8 +214,7 @@ mod tests {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn s3lightfixes_run() {
     let _ = run();
 }
-
