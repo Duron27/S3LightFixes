@@ -30,8 +30,10 @@ branch = "main"
 features = ["esp"]
 
 [lib]
-crate-type = ["cdylib"]
+name = "s3lightfixes"
+path = "src/lib.rs"
+crate-type = ["rlib", "cdylib"]
 
 [[bin]]
-name = "s3lightfixes"
+name = "s3lightfixes-cli"
 path = "src/main.rs"
