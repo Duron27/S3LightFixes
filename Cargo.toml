@@ -30,3 +30,7 @@ version = "0.9.0"
 git = "https://github.com/Greatness7/tes3"
 branch = "main"
 features = ["esp"]
+
+[lib]
+name = "s3lightfixes"
+crate-type = ["cdylib"]
