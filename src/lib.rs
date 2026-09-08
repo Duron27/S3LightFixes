@@ -216,9 +216,9 @@ mod tests {
 
 #[cfg(target_os = "android")]
 #[unsafe(no_mangle)]
-pub extern "C" fn Java_org_openmw_utils_S3LightFixesNative_s3lightfixes_run(
-    _env: *mut std::ffi::c_void,  // JNIEnv*
-    _class: *mut std::ffi::c_void, // jclass
+pub extern "C" fn Java_org_openmw_utils_S3LightFixesNative_run(
+    _env: *mut std::ffi::c_void,
+    _class: *mut std::ffi::c_void,
 ) -> std::os::raw::c_int {
     match run() {
         Ok(()) => 0,
