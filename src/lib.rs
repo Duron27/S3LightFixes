@@ -213,3 +213,9 @@ mod tests {
         );
     }
 }
+
+#[no_mangle]
+pub extern "C" fn s3lightfixes_run() {
+    let _ = run();
+}
+
