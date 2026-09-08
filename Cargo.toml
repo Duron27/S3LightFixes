@@ -20,8 +20,6 @@ native-dialog = "0.9.6"
 
 [dependencies.openmw-config]
 version = "1.1.0"
-# git = "https://github.com/magicaldave/Openmw_Config.git"
-# path = "../openmw-cfg"
 
 [dependencies.vfstool_lib]
 version = "0.9.0"
@@ -31,6 +29,15 @@ git = "https://github.com/Greatness7/tes3"
 branch = "main"
 features = ["esp"]
 
+# Optional: define the library name
 [lib]
 name = "s3lightfixes"
+
+# Build the library only on Android
+[target.'cfg(target_os = "android")'.lib]
 crate-type = ["cdylib"]
+
+# Build the binary only when NOT Android
+[target.'cfg(not(target_os = "android"))'.bin]
+name = "s3lightfixes"
+path = "src/main.rs"
